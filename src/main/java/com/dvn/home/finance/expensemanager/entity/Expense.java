@@ -1,5 +1,6 @@
 package com.dvn.home.finance.expensemanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,7 +11,7 @@ public class Expense {
     @Id
     private String id;
     private String date;
-    private int amount;
+    private float amount;
     private String category;
     private String type;
 
@@ -33,11 +34,11 @@ public class Expense {
         this.date = date;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 
@@ -55,5 +56,16 @@ public class Expense {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "id='" + id + '\'' +
+                ", date='" + date + '\'' +
+                ", amount=" + amount +
+                ", category='" + category + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
