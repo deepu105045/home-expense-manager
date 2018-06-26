@@ -23,16 +23,12 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom{
     private MongoTemplate mongoTemplate;
 
     @Override
-    public List<ExpenseSummary> groupByCategory(String year, String month) {
-        MatchOperation matchOperation = getMatchingRecordsForMonth(year,month);
-        GroupOperation groupByCategory = groupByCategory();
-        ProjectionOperation projectionOperation = getCategotyProjection();
-
+    public List<ExpenseSummary> groupByCategory(String year, String month, String type) {
         return mongoTemplate.aggregate(
                 Aggregation.newAggregation(
-                        matchOperation,
-                        groupByCategory,
-                        projectionOperation,
+                        getRecordByType(year,month,type),
+                        groupByCategory(),
+                        getCategotyProjection(),
                         sort(Sort.Direction.DESC,"totalAmount")
                 ), Expense.class, ExpenseSummary.class).getMappedResults();
     }
@@ -46,15 +42,14 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom{
                         getTypeProjection(),
                         sort(Sort.Direction.DESC , "totalAmount")
                 ),Expense.class,Total.class).getMappedResults();
+
+
     }
 
-    private MatchOperation getMatchingRecordsForMonth(String year, String month) {
-        Criteria amountCriteria = where("amount").gt(0).andOperator(where("date").gte(month+"/1/"+year).lte(month+"/31/"+year));
-        return match(amountCriteria);
-    }
 
     private MatchOperation getRecordByType(String year, String month, String type) {
-        Criteria typeCriteria = where("type").is(type).andOperator(where("date").gte(month+"/1/"+year).lte(month+"/31/"+year));
+        Criteria typeCriteria = where("type").is(type)
+                .andOperator(where("date").gte(month+"/1/"+year).lte(month+"/31/"+year));
         return match(typeCriteria);
     }
 

@@ -23,8 +23,8 @@ public class ExpenseService {
         expenseRepository.findAll().forEach(expense -> expenseList.add(expense));
         return expenseList;
     }
-    public List<ExpenseSummary> getSummary(String year, String month) {
-        return expenseRepository.groupByCategory(year,month);
+    public List<ExpenseSummary> getSummary(String year, String month,String type) {
+        return expenseRepository.groupByCategory(year,month,type);
     }
 
     public List<Total> getTotals(String year, String month, String type){
@@ -37,4 +37,7 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
+    public Expense getExpenseDetailsById(String expenseId) {
+        return expenseRepository.findOne(expenseId);
+    }
 }
